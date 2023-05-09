@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MusicFragment">
+
+
+    <TextView
+        android:id="@+id/musicTopTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="38px"
+        android:layout_marginTop="118px"
+        android:text="Музыка"
+        android:textColor="@color/selected"
+        android:textSize="30dp"
+        android:fontFamily="@font/gotbold"
+        />
+    <TextView
+        android:id="@+id/no_songs_text"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Песни не найдены"
+        android:fontFamily="@font/centurygothic"
+        android:textColor="@color/white"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/music_recycler_view"
+        android:layout_below="@+id/musicTopTitle"
+        />
+
+</RelativeLayout>

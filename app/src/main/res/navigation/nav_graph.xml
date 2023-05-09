@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.hypermedia2.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/musicFragment"
+        android:name="com.example.hypermedia2.MusicFragment"
+        android:label="fragment_music"
+        tools:layout="@layout/fragment_music" >
+        <action
+            android:id="@+id/action_musicFragment_to_playerFragment"
+            app:destination="@id/playerFragment"
+            app:enterAnim="@anim/slide_in_bottom"
+            app:exitAnim="@anim/slide_out_top"
+            app:popEnterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_top"/>
+    </fragment>
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="com.example.hypermedia2.VideoFragment"
+        android:label="fragment_video"
+        tools:layout="@layout/fragment_video" />
+    <fragment
+        android:id="@+id/otherFilesFragment"
+        android:name="com.example.hypermedia2.OtherFilesFragment"
+        android:label="fragment_other_files"
+        tools:layout="@layout/fragment_other_files" />
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.example.hypermedia2.PlayerFragment"
+        android:label="fragment_player"
+        tools:layout="@layout/fragment_player" >
+        <action
+            android:id="@+id/action_playerFragment_to_musicFragment"
+            app:destination="@id/musicFragment" />
+    </fragment>
+</navigation>
