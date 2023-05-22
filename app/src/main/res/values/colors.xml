@@ -11,5 +11,6 @@
     <color name="my_backgroundselectedcolor">#373737</color>
     <color name="cardviewmusic">#112123</color>
     <color name="selected">#00C2CB</color>
+    <color name="themecolor">#FF00C2CB</color>
     <color name="my_backgroundcolor">#1E1E1E</color>
 </resources>

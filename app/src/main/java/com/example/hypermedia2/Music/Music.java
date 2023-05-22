@@ -1,8 +1,7 @@
-package com.example.hypermedia2;
+package com.example.hypermedia2.Music;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 

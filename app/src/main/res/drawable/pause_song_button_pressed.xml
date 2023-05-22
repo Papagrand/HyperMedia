@@ -7,19 +7,19 @@
   <path
       android:pathData="M58,30C58,45.464 45.464,58 30,58C14.536,58 2,45.464 2,30C2,14.536 14.536,2 30,2C45.464,2 58,14.536 58,30Z">
     <aapt:attr name="android:fillColor">
-      <gradient 
+      <gradient
           android:startX="19"
           android:startY="-6.5"
           android:endX="19"
           android:endY="49.5"
           android:type="linear">
-        <item android:offset="0" android:color="#62C2D3"/>
-        <item android:offset="1" android:color="#698A8F"/>
+        <item android:offset="0" android:color="#52A1AF"/>
+        <item android:offset="1" android:color="#50686C"/>
       </gradient>
     </aapt:attr>
   </path>
   <path
       android:pathData="M26.5,24.167C26.5,23.522 25.978,23 25.334,23C24.689,23 24.167,23.522 24.167,24.167V35.833C24.167,36.478 24.689,37 25.334,37C25.978,37 26.5,36.478 26.5,35.833V24.167ZM35.834,24.167C35.834,23.522 35.311,23 34.667,23C34.023,23 33.5,23.522 33.5,24.167V35.833C33.5,36.478 34.023,37 34.667,37C35.311,37 35.834,36.478 35.834,35.833V24.167Z"
-      android:fillColor="#ffffff"
+      android:fillColor="#DCDCDC"
       android:fillType="evenOdd"/>
 </vector>

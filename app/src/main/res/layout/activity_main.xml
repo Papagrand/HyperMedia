@@ -15,18 +15,82 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:id="@+id/navigation_menu"
-        style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
-        android:padding="10dp"
-        app:menu="@menu/bottom_nav_menu"
-        android:layout_gravity="bottom"
-        app:labelVisibilityMode="unlabeled"
-        app:itemIconTint="@drawable/selector_nav_button"
-        android:background="@color/black"/>
+        android:layout_height="120dp"
+        android:orientation="vertical">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/miniPlayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/miniPlayerImageSong"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            <ImageButton
+                android:id="@+id/playButtonMini"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginRight="20dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintRight_toLeftOf="@id/nextButtonMini"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/pause" />
+            <ImageButton
+                android:id="@+id/nextButtonMini"
+                android:layout_width="24dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="20dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/pressed_next_selector" />
+            <TextView
+                android:id="@+id/songNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="3dp"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:fontFamily="@font/centurygothic"
+                android:text="SongName"
+                android:textColor="@color/white"
+                app:layout_constraintLeft_toRightOf="@+id/miniPlayerImageSong"
+                app:layout_constraintTop_toTopOf="@+id/miniPlayerImageSong" />
 
+            <TextView
+                android:id="@+id/artistTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="3dp"
+                android:fontFamily="@font/centurygothic"
+                android:text="Artist"
+                android:textSize="12dp"
+                android:textColor="@color/gray"
+                app:layout_constraintBottom_toBottomOf="@+id/miniPlayerImageSong"
+                app:layout_constraintLeft_toRightOf="@+id/miniPlayerImageSong" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:id="@+id/navigation_menu"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+            android:padding="10dp"
+            app:menu="@menu/bottom_nav_menu"
+            android:layout_gravity="bottom"
+            app:labelVisibilityMode="unlabeled"
+            app:itemIconTint="@drawable/selector_nav_button"
+            android:background="@drawable/bottom_navigation_background"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -1,43 +1,44 @@
-package com.example.hypermedia2;
+package com.example.hypermedia2.Music;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.example.hypermedia2.R;
 
 import java.util.ArrayList;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
 
+    ImageButton playPausePlayer, playPauseMiniPlayer;
     Context context;
     Resources resources;
     ArrayList<Music> musicArrayList;
     private int selectedPosition = -1;
+    private int lastSelectedPosition = -1;
 
-    public interface OnItemClickListener{
-        void onItemClick(int position);
+    public interface MusicAdapterListener{
+        void onPlayerExpand(ArrayList<Music> musicArrayList);
     }
-    private  OnItemClickListener listener;
-    public void setOnItemClickListener(OnItemClickListener listener){
-        this.listener = listener;
+    private  MusicAdapterListener playerExpandListener;
+    public void setMusicAdapterListener(MusicAdapterListener listener){
+        this.playerExpandListener = listener;
     }
+
+
     public void setMusicList(ArrayList<Music> musicList) {
         this.musicArrayList = musicList;
         notifyDataSetChanged();
@@ -66,16 +67,25 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Запуск bottomSheet с плеером
-
-                PlayerFragment playerBottomSheetFragment = new PlayerFragment(musicArrayList);
-                MyMediaPlayer.getInstance().reset();
+                if (lastSelectedPosition == holder.getAdapterPosition()){
+                    if (MyMediaPlayer.getInstance().isPlaying()){
+                        MyMediaPlayer.getInstance().pause();
+                    }else{
+                        MyMediaPlayer.getInstance().start();
+                    }
+                }else{
+                    //Запуск bottomSheet с плеером
+                    PlayerFragment playerBottomSheetFragment = new PlayerFragment(musicArrayList);
+                    MyMediaPlayer.getInstance().reset();
+                    playerBottomSheetFragment.show(((AppCompatActivity)context).getSupportFragmentManager(), playerBottomSheetFragment.getTag());
+                }
                 int previousSelectedPosition = selectedPosition;
                 selectedPosition = holder.getAdapterPosition();
                 notifyItemChanged(previousSelectedPosition);
                 notifyItemChanged(selectedPosition);
                 MyMediaPlayer.currentIndex = selectedPosition;
-                playerBottomSheetFragment.show(((AppCompatActivity)context).getSupportFragmentManager(), playerBottomSheetFragment.getTag());
+                lastSelectedPosition = holder.getAdapterPosition();
+                notifyDataSetChanged();
             }
         });
         if (selectedPosition == position) {
@@ -83,6 +93,9 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         } else {
             holder.view.setBackgroundColor(ContextCompat.getColor(context, R.color.my_backgroundcolor));
         }
+    }
+    public ArrayList<Music> getMusicArrayList() {
+        return musicArrayList;
     }
 
     public ArrayList<Music> getMusicArrayList(Context context) {

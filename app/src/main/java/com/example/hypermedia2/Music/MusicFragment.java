@@ -1,27 +1,20 @@
-package com.example.hypermedia2;
+package com.example.hypermedia2.Music;
 
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.NavOptions;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import com.example.hypermedia2.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MusicFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -81,22 +74,6 @@ public class MusicFragment extends Fragment {
         ArrayList<Music> musicList = musicAdapter.getMusicArrayList(requireContext());
         musicAdapter.setMusicList(musicList);
         recyclerView.setAdapter(musicAdapter);
-        musicAdapter.setOnItemClickListener(new MusicAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                NavOptions navOptions = new NavOptions.Builder()
-                        .setEnterAnim(R.anim.slide_in_bottom)
-                        .setExitAnim(R.anim.slide_out_top)
-                        .build();
-                // Создаем Bundle, чтобы передать аргументы в PlayerFragment
-                Bundle bundle = new Bundle();
-                bundle.putInt("position", position);
-
-                // Находим NavController и переключаемся на PlayerFragment, передавая аргументы
-                NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.action_musicFragment_to_playerFragment, null,navOptions);
-            }
-        });
 
     }
 }

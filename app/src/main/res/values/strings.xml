@@ -2,4 +2,12 @@
     <string name="app_name">HyperMedia2</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="long_text">long Text long Text long Text
+        long Text long Text long Text long Text long Text long Text Text long Text long Text long TextText long Text long Text long Text</string>
+    <string name="text_with_bullets">\u2022</string>
+
+    <string name="size_in_b">%1$.2f B</string>
+    <string name="size_in_kb">%1$.2f KB</string>
+    <string name="size_in_mb">%1$.2f MB</string>
+    <string name="size_in_gb">%1$.2f GB</string>
 </resources>
