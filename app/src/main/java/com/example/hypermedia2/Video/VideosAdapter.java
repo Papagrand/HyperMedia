@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +23,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.hypermedia2.R;
+import com.example.hypermedia2.VideoPlayerActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,12 +39,14 @@ import java.util.ArrayList;
 
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyVideoHolder> {
 
-    private ArrayList<VideoModel> videoFolder = new ArrayList<>();
+    public static ArrayList<VideoModel> videoFolder = new ArrayList<>();
     private Context context;
+    VideoFolder videoFolderFragment;
 
-    public VideosAdapter(ArrayList<VideoModel> videoFolder, Context context) {
+    public VideosAdapter(ArrayList<VideoModel> videoFolder, Context context, VideoFolder videoFolderFragment) {
         this.videoFolder = videoFolder;
         this.context = context;
+        this.videoFolderFragment = videoFolderFragment;
     }
 
 
@@ -49,7 +54,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyVideoHol
     @Override
     public MyVideoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.videofiles_view, parent, false);
-        return new  MyVideoHolder(view);
+        return new  MyVideoHolder(view, videoFolderFragment);
     }
     //проблема здесь
     @Override
@@ -63,6 +68,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyVideoHol
         holder.duration.setText(videoFolder.get(position).getDuration());
         holder.size.setText(videoFolder.get(position).getSize());
         holder.resolution.setText(videoFolder.get(position).getResolution());
+        //Обработчик всплывающего снизу окна с параметрами
         holder.menu.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context, R.style.BottomSheetDialogThemeVideoMenu);
             View bottomSheetVideoView = LayoutInflater.from(context).inflate(R.layout.videofile_menu, null);
@@ -84,6 +90,25 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyVideoHol
                 showProperties(position);
             });
         });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, VideoPlayerActivity.class);
+                intent.putExtra("p", holder.getPosition());
+                intent.putExtra("video_title", videoFolder.get(holder.getPosition()).getTitle());
+                context.startActivity(intent);
+            }
+        });
+
+        if(videoFolderFragment.is_selectable){
+            holder.checkBox.setVisibility(View.VISIBLE);
+            holder.menu.setVisibility(View.GONE);
+            holder.checkBox.setChecked(false);
+        }else{
+            holder.checkBox.setVisibility(View.GONE);
+            holder.menu.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -183,11 +208,13 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyVideoHol
 
     }
 
-    public class MyVideoHolder extends RecyclerView.ViewHolder{
+    public class MyVideoHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView thumbnail, menu;
         TextView title, size, duration, resolution;
+        CheckBox checkBox;
+        VideoFolder videoFolderFragment;
 
-        public MyVideoHolder(@NonNull View itemView) {
+        public MyVideoHolder(@NonNull View itemView, VideoFolder videoFolderFragment) {
             super(itemView);
 
             thumbnail = itemView.findViewById(R.id.thumbnail);
@@ -196,6 +223,16 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyVideoHol
             duration = itemView.findViewById(R.id.video_duration);
             resolution = itemView.findViewById(R.id.video_quality);
             menu = itemView.findViewById(R.id.video_menu);
+            checkBox = itemView.findViewById(R.id.video_folder_checkbox);
+            this.videoFolderFragment = videoFolderFragment;
+
+            itemView.setOnLongClickListener(videoFolderFragment);
+            checkBox.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            videoFolderFragment.prepareSelection(v,getAdapterPosition());
         }
     }
 }

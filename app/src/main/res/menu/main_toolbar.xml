@@ -31,5 +31,24 @@
 
         </menu>
     </item>
+    <item
+        android:title="More"
+        android:icon="@drawable/option_blue"
+        app:showAsAction="ifRoom">
+
+        <menu>
+            <item
+                android:id="@+id/add_to_playlistdir"
+                android:title="Добавить в папку"
+                app:showAsAction="never"
+                />
+            <item
+                android:id="@+id/send_to_anouther"
+                android:title="Отправить"
+                app:showAsAction="never"
+                />
+        </menu>
+
+    </item>
 
 </menu>

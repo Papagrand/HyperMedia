@@ -19,6 +19,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,14 +39,18 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class VideoFolder extends Fragment implements SearchView.OnQueryTextListener {
+public class VideoFolder extends Fragment implements SearchView.OnQueryTextListener, View.OnLongClickListener {
 
     private static final String MY_SORT_PREF = "sortOrder";
     private RecyclerView recyclerView;
     private String name;
     private ArrayList<VideoModel> videoModelArrayList = new ArrayList<>();
+    ArrayList<VideoModel> selectionArrayList = new ArrayList<>();
+    int count = 0;
     private VideosAdapter videosAdapter;
     private boolean isBackPressed = false;
+    public boolean is_selectable = false;
+    TextView countText;
 
     Toolbar toolbar;
 
@@ -93,6 +99,7 @@ public class VideoFolder extends Fragment implements SearchView.OnQueryTextListe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView = view.findViewById(R.id.videoFolder_recycleview);
+        countText = view.findViewById(R.id.counter_textView);
         toolbar = view.findViewById(R.id.videoFolderToolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -101,22 +108,32 @@ public class VideoFolder extends Fragment implements SearchView.OnQueryTextListe
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                isBackPressed = true;
-                Navigation.findNavController(requireView()).navigate(R.id.action_videoFolder_to_videoFragment);
+                if (!is_selectable){
+                    isBackPressed = true;
+                    Navigation.findNavController(requireView()).navigate(R.id.action_videoFolder_to_videoFragment);
+                }else{
+                    clearSelectingToolbar();
+                    videosAdapter.notifyDataSetChanged();
+                }
             }
         });
 
         int index = name.lastIndexOf("/");
         String onlyFolderName = name.substring(index+1);
-        toolbar.setTitle(onlyFolderName);
+        countText.setText(onlyFolderName);
         loadVideos();
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            isBackPressed = true;
-            Navigation.findNavController(requireView()).navigate(R.id.action_videoFolder_to_videoFragment);
+            if (!is_selectable){
+                isBackPressed = true;
+                Navigation.findNavController(requireView()).navigate(R.id.action_videoFolder_to_videoFragment);
+            }else{
+                clearSelectingToolbar();
+                videosAdapter.notifyDataSetChanged();
+            }
             return true;
         } else {
             SharedPreferences.Editor editor = ((AppCompatActivity) getActivity()).getSharedPreferences(MY_SORT_PREF, Context.MODE_PRIVATE).edit();
@@ -138,6 +155,10 @@ public class VideoFolder extends Fragment implements SearchView.OnQueryTextListe
                     editor.apply();
                     loadVideos(); // Обновляем список видео
                     return true;
+                }
+                case R.id.add_to_playlistdir: {
+                    refresh();
+                    break;
                 }
             }
         }
@@ -201,7 +222,7 @@ public class VideoFolder extends Fragment implements SearchView.OnQueryTextListe
     private void loadVideos() {//Если ошибка будет в этой функции, то вместо getContext(), getActivity()
         videoModelArrayList = getallVideoFromFolder(getContext(), name);
         if (name != null && videoModelArrayList.size() > 0) {
-            videosAdapter = new VideosAdapter(videoModelArrayList, getContext());
+            videosAdapter = new VideosAdapter(videoModelArrayList, getContext(), this);
             recyclerView.setAdapter(videosAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         } else {
@@ -287,6 +308,65 @@ public class VideoFolder extends Fragment implements SearchView.OnQueryTextListe
             cursor.close();
         }
         return list;
+    }
+
+    private void refresh(){
+        if(name != null && videoModelArrayList.size()>0){
+            videoModelArrayList.clear();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    loadVideos();
+                    videosAdapter.notifyDataSetChanged();
+                    Toast.makeText(getContext(), "Refreshed", Toast.LENGTH_SHORT).show();
+                }
+            },1500);
+        }else{
+            Toast.makeText(getContext(), "folder is empty", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.item_selected_menu);
+        is_selectable = true;
+        videosAdapter.notifyDataSetChanged();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.back));
+        return true;
+    }
+
+    public void prepareSelection(View v, int position) {
+        if( ((CheckBox)v).isChecked()){
+            selectionArrayList.add(videoModelArrayList.get(position));
+            count++;
+            updateCount(count);
+        }else{
+            selectionArrayList.remove(videoModelArrayList.get(position));
+            count--;
+            updateCount(count);
+        }
+    }
+
+    private void updateCount(int counts) {
+        if (counts == 0){
+            countText.setText("Выбрано: 0");
+        }else {
+            countText.setText("Выбрано: "+counts);
+        }
+    }
+    private void clearSelectingToolbar(){
+        is_selectable = false;
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.main_toolbar);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.back));
+        int index = name.lastIndexOf("/");
+        String onlyFolderName = name.substring(index+1);
+        countText.setText(onlyFolderName);
+        count = 0;
+        selectionArrayList.clear();
     }
 
 

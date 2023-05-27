@@ -3,6 +3,7 @@
     <style name="Theme.HyperMedia2" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowEnterAnimation">@anim/slide_out_top</item>
         <item name="android:windowExitAnimation">@anim/slide_in_bottom</item>
+
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -12,7 +13,7 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/themecolor</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetTheme</item>
         <!-- Customize your theme here. -->
     </style>
