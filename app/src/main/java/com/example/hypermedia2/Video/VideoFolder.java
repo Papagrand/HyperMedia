@@ -15,6 +15,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hypermedia2.Home.HomeFragment;
 import com.example.hypermedia2.MainActivity;
 import com.example.hypermedia2.R;
 
@@ -160,10 +162,22 @@ public class VideoFolder extends Fragment implements SearchView.OnQueryTextListe
                     refresh();
                     break;
                 }
+                case R.id.replace:{
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("selectedList", selectionArrayList);
+                    HomeFragment homeFragment = new HomeFragment();
+                    homeFragment.setArguments(bundle);
+
+                    NavController navController = Navigation.findNavController(requireView()); // Получаем NavController
+                    navController.navigate(R.id.action_videoFolder_to_homeFragment, bundle);
+
+                    break;
+                }
             }
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public void onResume() {

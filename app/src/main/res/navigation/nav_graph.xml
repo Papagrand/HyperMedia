@@ -7,9 +7,13 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.hypermedia2.HomeFragment"
+        android:name="com.example.hypermedia2.Home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_videosInPlaylistFragment"
+            app:destination="@id/videosInPlaylistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/musicFragment"
         android:name="com.example.hypermedia2.Music.MusicFragment"
@@ -66,5 +70,17 @@
         <action
             android:id="@+id/action_videoFolder_to_videoFragment"
             app:destination="@id/videoFragment" />
+        <action
+            android:id="@+id/action_videoFolder_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/videosInPlaylistFragment"
+        android:name="com.example.hypermedia2.Home.VideosInPlaylistFragment"
+        android:label="fragment_videos_in_playlist"
+        tools:layout="@layout/fragment_videos_in_playlist" >
+        <action
+            android:id="@+id/action_videosInPlaylistFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

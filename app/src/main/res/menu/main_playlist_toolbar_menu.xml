@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/playlist_search"
+        android:icon="@drawable/search"
+        android:title="Search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/playlist_sortby"
+        android:icon="@drawable/sort"
+        android:title="SortBy"
+        app:showAsAction="ifRoom" >
+        <menu>
+            <item
+                android:id="@+id/sort_by_date"
+                android:title="По дате"
+                />
+            <item
+                android:id="@+id/sort_by_name"
+                android:title="По названию"
+                />
+            <item
+                android:id="@+id/sort_by_size"
+                android:title="По размеру"
+                />
+
+        </menu>
+    </item>
+    <item
+        android:title="Add"
+        android:icon="@drawable/add_video_to_playlist"
+        app:showAsAction="ifRoom">
+
+
+    </item>
+
+</menu>

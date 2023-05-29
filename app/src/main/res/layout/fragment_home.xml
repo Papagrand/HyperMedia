@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Home.HomeFragment"
+    android:orientation="vertical"
     android:id="@+id/homeFragment">
 
     <LinearLayout
@@ -25,12 +27,43 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="38px"
             android:layout_marginTop="118px"
-            android:text="Home"
+            android:text="Главная"
             android:textColor="@color/selected"
             android:textSize="30dp"
             android:fontFamily="@font/gotbold"/>
 
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_add_playlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/button_add_playlist"
+            android:src="@drawable/add_playlist"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Добавить плейлист"
+            android:fontFamily="@font/centurygothic"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:id="@+id/home_recycle_view"
+        android:layout_width="match_parent"
+        android:layout_margin="10dp"
+        android:layout_height="match_parent"
+        />
 
 
-</FrameLayout>
+</LinearLayout>
