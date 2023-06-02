@@ -13,20 +13,17 @@ public class Playlist implements Parcelable {
     int id;
     String type;
     String name;
-    ArrayList<VideoModel> videos;
 
-    public Playlist(int id, String name,String type, ArrayList<VideoModel> videos){
+    public Playlist(int id, String name,String type){
         this.id = id;
         this.type = type;
         this.name = name;
-        this.videos = videos;
     }
 
     protected Playlist(Parcel in) {
         id = in.readInt();
         type = in.readString();
         name = in.readString();
-        videos = in.createTypedArrayList(VideoModel.CREATOR);
     }
 
     public static final Creator<Playlist> CREATOR = new Creator<Playlist>() {
@@ -65,13 +62,6 @@ public class Playlist implements Parcelable {
         this.id = id;
     }
 
-    public ArrayList<VideoModel> getVideos() {
-        return videos;
-    }
-
-    public void setVideos(ArrayList<VideoModel> videos) {
-        this.videos = videos;
-    }
 
     @Override
     public int describeContents() {
@@ -83,6 +73,5 @@ public class Playlist implements Parcelable {
         parcel.writeInt(id);
         parcel.writeString(type);
         parcel.writeString(name);
-        parcel.writeTypedList(videos);
     }
 }

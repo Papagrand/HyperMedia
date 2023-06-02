@@ -45,6 +45,9 @@
                 app:argType="string"
                 android:defaultValue="Hello Fr" />
         </action>
+        <action
+            android:id="@+id/action_videoFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
 
 
     </fragment>
@@ -82,5 +85,8 @@
         <action
             android:id="@+id/action_videosInPlaylistFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_videosInPlaylistFragment_to_videoFragment"
+            app:destination="@id/videoFragment" />
     </fragment>
 </navigation>

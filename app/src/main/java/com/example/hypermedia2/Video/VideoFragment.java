@@ -5,9 +5,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.hypermedia2.R;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -34,6 +38,7 @@ public class VideoFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+    private String argFromVIP;
 
     public VideoFragment() {
         // Required empty public constructor
@@ -98,6 +103,7 @@ public class VideoFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            argFromVIP = getArguments().getString("VIP");
         }
     }
 
@@ -105,7 +111,20 @@ public class VideoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View videoView = inflater.inflate(R.layout.fragment_video,container,false);
-        recyclerView = videoView.findViewById(R.id.video_recycle_view);
+        return videoView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                NavController navController = Navigation.findNavController(requireView());
+                navController.popBackStack();
+            }
+        });
+        recyclerView = view.findViewById(R.id.video_recycle_view);
         videoList = fetchAllVideos(getActivity());
         if(folderList != null && folderList.size()>0 && videoList != null){
             videoFolderAdapter = new VideoFolderAdapter(folderList, videoList, getActivity());
@@ -114,11 +133,6 @@ public class VideoFragment extends Fragment {
         }else{
             Toast.makeText(getActivity(), "can't find any videos folder", Toast.LENGTH_SHORT).show();
         }
-        return videoView;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
 }

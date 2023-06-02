@@ -17,21 +17,18 @@
         app:showAsAction="ifRoom" >
         <menu>
             <item
-                android:id="@+id/sort_by_date"
-                android:title="По дате"
-                />
-            <item
-                android:id="@+id/sort_by_name"
+                android:id="@+id/playlist_sort_by_name"
                 android:title="По названию"
                 />
             <item
-                android:id="@+id/sort_by_size"
+                android:id="@+id/playlist_sort_by_size"
                 android:title="По размеру"
                 />
 
         </menu>
     </item>
     <item
+        android:id="@+id/add_to_playlist"
         android:title="Add"
         android:icon="@drawable/add_video_to_playlist"
         app:showAsAction="ifRoom">

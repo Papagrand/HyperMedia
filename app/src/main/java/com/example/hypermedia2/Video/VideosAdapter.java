@@ -56,7 +56,6 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.MyVideoHol
         View view = LayoutInflater.from(context).inflate(R.layout.videofiles_view, parent, false);
         return new  MyVideoHolder(view, videoFolderFragment);
     }
-    //проблема здесь
     @Override
     public void onBindViewHolder(@NonNull MyVideoHolder holder, int position) {
         RequestOptions options = new RequestOptions()

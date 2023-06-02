@@ -1,7 +1,7 @@
 package com.example.hypermedia2;
 
 import static com.example.hypermedia2.Video.VideosAdapter.videoFolder;
-
+import static com.example.hypermedia2.Home.VideosInPlaylistAdapter.playlistNewVideos;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,6 +43,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     private int position = -1;
     private int savedPosition = 0;
     private PlayerView videoView;
+    private int brightness;
     private Handler handler;
     private Runnable runnable;
     SimpleExoPlayer player;
@@ -51,7 +52,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     LinearLayout one, two, three, four, five, lockControls, unlockControls, tapToUnlock, audiotrack;
     ImageButton goBack, rewind, forward, playPause;
     TextView title,currentTime, remainTime;
-    SeekBar videoSeekBar;
+    SeekBar videoSeekBar, brightnessSeekBar;
     String videoTitle;
     boolean isOpen = true;
     boolean isVideoPlaying = true;
@@ -94,6 +95,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         unlockControls = findViewById(R.id.video_five_child_layout);
         tapToUnlock = findViewById(R.id.videoView_tap_to_unlock);
         audiotrack = findViewById(R.id.videoView_track);
+        brightnessSeekBar = findViewById(R.id.videoView_brightness);
 
         videoSeekBar.setMax(1000);
         videoSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -117,6 +119,38 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
 
             }
         });
+
+        brightnessSeekBar.setMax(255);
+        brightnessSeekBar.setKeyProgressIncrement(1);
+
+        brightnessSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(progress<=20)
+                {
+                    brightness=20;
+                }
+                else
+                {
+                    brightness = progress;
+                }
+                float perc = (brightness /(float)255)*100;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+                layoutParams.screenBrightness = brightness / (float)255;
+                getWindow().setAttributes(layoutParams);
+            }
+        });
+
+
         videoTitle = getIntent().getStringExtra("video_title");
         title.setText(videoTitle);
 
@@ -128,47 +162,93 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         }
 
         position = getIntent().getIntExtra("p", -1);
-        String path = videoFolder.get(position).getPath();
+        String path;
+        if (videoFolder != null && position >= 0 && position < videoFolder.size()) {
+            path = videoFolder.get(position).getPath();
+            if (path != null) {
+                Uri uri = Uri.parse(path);
+                player = new SimpleExoPlayer.Builder(this).build();
+                isVideoPlaying = true;
+                DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "app"));
+                concatenatingMediaSource = new ConcatenatingMediaSource();
+                for (int i = 0; i < videoFolder.size(); i++) {
+                    new File(String.valueOf(videoFolder.get(i)));
+                    MediaItem mediaItem = MediaItem.fromUri(uri); // Create MediaItem using uri
+                    MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(mediaItem); // Pass the mediaItem
+                    concatenatingMediaSource.addMediaSource(mediaSource);
+                }
+                videoView.setPlayer(player);
+                videoView.setKeepScreenOn(true);
+                player.prepare(concatenatingMediaSource);
 
-        if (path != null) {
-            Uri uri = Uri.parse(path);
-            player = new SimpleExoPlayer.Builder(this).build();
-            isVideoPlaying = true;
-            DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "app"));
-            concatenatingMediaSource = new ConcatenatingMediaSource();
-            for (int i = 0; i < videoFolder.size(); i++) {
-                new File(String.valueOf(videoFolder.get(i)));
-                MediaItem mediaItem = MediaItem.fromUri(uri); // Create MediaItem using uri
-                MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                        .createMediaSource(mediaItem); // Pass the mediaItem
-                concatenatingMediaSource.addMediaSource(mediaSource);
-            }
-            videoView.setPlayer(player);
-            videoView.setKeepScreenOn(true);
-            player.prepare(concatenatingMediaSource);
-
-            player.addListener(new Player.EventListener() {
-                @Override
-                public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                    if (playbackState == Player.STATE_READY){
-                        long duration = player.getDuration();
-                        long currentPosition = player.getCurrentPosition();
-                        if (duration > 0) {
-                            int progress = (int) (1000L * currentPosition / duration);
-                            videoSeekBar.setProgress(progress);
+                player.addListener(new Player.EventListener() {
+                    @Override
+                    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                        if (playbackState == Player.STATE_READY){
+                            long duration = player.getDuration();
+                            long currentPosition = player.getCurrentPosition();
+                            if (duration > 0) {
+                                int progress = (int) (1000L * currentPosition / duration);
+                                videoSeekBar.setProgress(progress);
+                            }
                         }
                     }
-                }
-            });
+                });
 
-            player.seekTo(position, C.TIME_UNSET);
-            player.play();
-            audiotrack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                player.seekTo(position, C.TIME_UNSET);
+                player.play();
+                audiotrack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
+                    }
+                });
+            }
+        }
+        else if (playlistNewVideos != null && position >= 0 && position < playlistNewVideos.size()) {
+
+            path = playlistNewVideos.get(position).getPath();
+            if (path != null) {
+                Uri uri = Uri.parse(path);
+                player = new SimpleExoPlayer.Builder(this).build();
+                isVideoPlaying = true;
+                DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "app"));
+                concatenatingMediaSource = new ConcatenatingMediaSource();
+                for (int i = 0; i < playlistNewVideos.size(); i++) {
+                    new File(String.valueOf(playlistNewVideos.get(i)));
+                    MediaItem mediaItem = MediaItem.fromUri(uri); // Create MediaItem using uri
+                    MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(mediaItem); // Pass the mediaItem
+                    concatenatingMediaSource.addMediaSource(mediaSource);
                 }
-            });
+                videoView.setPlayer(player);
+                videoView.setKeepScreenOn(true);
+                player.prepare(concatenatingMediaSource);
+
+                player.addListener(new Player.EventListener() {
+                    @Override
+                    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                        if (playbackState == Player.STATE_READY){
+                            long duration = player.getDuration();
+                            long currentPosition = player.getCurrentPosition();
+                            if (duration > 0) {
+                                int progress = (int) (1000L * currentPosition / duration);
+                                videoSeekBar.setProgress(progress);
+                            }
+                        }
+                    }
+                });
+
+                player.seekTo(position, C.TIME_UNSET);
+                player.play();
+                audiotrack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
         }
         else {
             Toast.makeText(this, "path didn't exist", Toast.LENGTH_SHORT).show();

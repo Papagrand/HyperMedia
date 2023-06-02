@@ -21,12 +21,14 @@ import com.example.hypermedia2.Music.MyMediaPlayer;
 import com.example.hypermedia2.Music.PlayerFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements PlayerFragment.PlayerInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 2;
     private BottomNavigationView bottomNavigationView;
+    private DBaseHelper dBaseHelper;
     private NavController navController;
     public ImageButton playPauseButton;
 
@@ -42,42 +44,48 @@ public class MainActivity extends AppCompatActivity implements PlayerFragment.Pl
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
-    @Override
-    public void onExpandPlayer(ArrayList<Music> musicArrayList) {
-        // Expand the player fragment or perform any desired actions
-        // For example, replace the current fragment with the player fragment
-
-        PlayerFragment playerFragment = new PlayerFragment(musicArrayList);
-        // Pass the musicArrayList to the player fragment if needed
-
-        playerFragment.show(this.getSupportFragmentManager(), playerFragment.getTag());
-    }
+//    @Override
+//    public void onExpandPlayer(ArrayList<Music> musicArrayList) {
+//        // Expand the player fragment or perform any desired actions
+//        // For example, replace the current fragment with the player fragment
+//
+//        PlayerFragment playerFragment = new PlayerFragment(musicArrayList);
+//        // Pass the musicArrayList to the player fragment if needed
+//
+//        playerFragment.show(this.getSupportFragmentManager(), playerFragment.getTag());
+//    }
     @Override
     protected void onResume() {
         super.onResume();
 
     }
-    private void playNextMusic(ArrayList<Music> musicArrayList, ImageButton playPauseButton){
-        if(MyMediaPlayer.currentIndex==musicArrayList.size()-1){
-            return;
-        }
-        MyMediaPlayer.currentIndex+=1;
-        mediaPlayer.reset();
-        mediaPlayer.start();
-    }
-    private void pausePlayMusic(ArrayList<Music> musicArrayList,ImageButton playPauseButton){
-        if (mediaPlayer.isPlaying()){
-            playPauseButton.setImageResource(R.drawable.play);
-            mediaPlayer.pause();
-        }else{
-            playPauseButton.setImageResource(R.drawable.pause);
-            mediaPlayer.start();
-        }
-    }
+//    private void playNextMusic(ArrayList<Music> musicArrayList, ImageButton playPauseButton){
+//        if(MyMediaPlayer.currentIndex==musicArrayList.size()-1){
+//            return;
+//        }
+//        MyMediaPlayer.currentIndex+=1;
+//        mediaPlayer.reset();
+//        mediaPlayer.start();
+//    }
+//    private void pausePlayMusic(ArrayList<Music> musicArrayList,ImageButton playPauseButton){
+//        if (mediaPlayer.isPlaying()){
+//            playPauseButton.setImageResource(R.drawable.play);
+//            mediaPlayer.pause();
+//        }else{
+//            playPauseButton.setImageResource(R.drawable.pause);
+//            mediaPlayer.start();
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dBaseHelper = new DBaseHelper(this);
+        try {
+            dBaseHelper.createDataBase();
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
         setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -118,36 +126,36 @@ public class MainActivity extends AppCompatActivity implements PlayerFragment.Pl
             }
         }
 
-        musicAdapter = new MusicAdapter(this);
-        ArrayList<Music> musicArrayList = musicAdapter.getMusicArrayList(this);
-        musicAdapter.setMusicList(musicArrayList);
-
-        ConstraintLayout miniPlayerLayout = findViewById(R.id.miniPlayer);
-        miniPlayerLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (MyMediaPlayer.getCurrentIndex()!=-1) {
-                    onExpandPlayer(musicArrayList);
-                }
-            }
-        });
-
-        ImageButton playPauseButtonMini = findViewById(R.id.playButtonMini);
-        playPauseButtonMini.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pausePlayMusic(musicArrayList,playPauseButtonMini);
-            }
-        });
-
-        ImageButton nextButtonMini = findViewById(R.id.nextButtonMini);
-
-        nextButtonMini.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playNextMusic(musicArrayList, playPauseButton);
-            }
-        });
+//        musicAdapter = new MusicAdapter(this);
+//        ArrayList<Music> musicArrayList = musicAdapter.getMusicArrayList(this);
+//        musicAdapter.setMusicList(musicArrayList);
+//
+//        ConstraintLayout miniPlayerLayout = findViewById(R.id.miniPlayer);
+//        miniPlayerLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (MyMediaPlayer.getCurrentIndex()!=-1) {
+//                    onExpandPlayer(musicArrayList);
+//                }
+//            }
+//        });
+//
+//        ImageButton playPauseButtonMini = findViewById(R.id.playButtonMini);
+//        playPauseButtonMini.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                pausePlayMusic(musicArrayList,playPauseButtonMini);
+//            }
+//        });
+//
+//        ImageButton nextButtonMini = findViewById(R.id.nextButtonMini);
+//
+//        nextButtonMini.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                playNextMusic(musicArrayList, playPauseButton);
+//            }
+//        });
         }
 
     }

@@ -1,10 +1,14 @@
 package com.example.hypermedia2.Home;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,12 +16,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hypermedia2.DBaseHelper;
 import com.example.hypermedia2.R;
 import com.example.hypermedia2.Video.VideoFolder;
 import com.example.hypermedia2.Video.VideoModel;
@@ -28,14 +35,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDialogListener {
+public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDialogListener, View.OnLongClickListener {
 
     private static String FILE_NAME;
 
     private ArrayList<String> folderList = new ArrayList<>();
+    ArrayList<String> selectionFolderList = new ArrayList<>();
     private ArrayList<VideoModel> selectedVideosArrayList;
     PlaylistAdapter playlistAdapter;
     RecyclerView recyclerView;
+    int count = 0;
+    public boolean is_selectable = false;
+    private boolean isBackPressed = false;
+    TextView countText;
+    ImageButton buttonDelete, buttonParentControll, cancelChanges, parentControll;
+    ImageView kidsIndecator;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -77,7 +91,6 @@ public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDia
                 folderList.add(folder.getAbsolutePath());
             }
         }
-
         playlistAdapter.updateData(folderList);
     }
 
@@ -86,23 +99,87 @@ public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDia
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View playlistView = inflater.inflate(R.layout.fragment_home, container, false);
-        recyclerView = playlistView.findViewById(R.id.home_recycle_view);
 
-        playlistAdapter = new PlaylistAdapter(folderList, getActivity(), selectedVideosArrayList);
-        recyclerView.setAdapter(playlistAdapter);
 
         return playlistView;
     }
 
     @Override
     public void onResume() {
-        super.onResume();
         displayFolders();
+        super.onResume();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        recyclerView = view.findViewById(R.id.home_recycle_view);
+//        DBaseHelper dBaseHelper = new DBaseHelper(getContext());
+//        dBaseHelper.openDataBase();
+//        playlistAdapter = new PlaylistAdapter(folderList, getActivity(), dBaseHelper.getAllPlaylists());
+        playlistAdapter = new PlaylistAdapter(folderList, getActivity(), selectedVideosArrayList,this);
+        recyclerView.setAdapter(playlistAdapter);
         ImageButton addPlaylistImageButton= view.findViewById(R.id.button_add_playlist);
+        buttonDelete = view.findViewById(R.id.from_homefragment_delete);
+        buttonParentControll = view.findViewById(R.id.add_delete_parent_controll);
+        cancelChanges = view.findViewById(R.id.cancel_changes);
+        parentControll = view.findViewById(R.id.add_delete_parent_controll);
+        kidsIndecator = view.findViewById(R.id.kids_indicator);
+        cancelChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                cancelChanges.setVisibility(View.GONE);
+                buttonDelete.setVisibility(View.GONE);
+                buttonParentControll.setVisibility(View.GONE);
+                clearSelectingToolbar();
+                playlistAdapter.notifyDataSetChanged();
+            }
+        });
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Подтверждение удаления")
+                        .setMessage("Вы уверены, что хотите удалить выбранные папки?")
+                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Пользователь нажал "Да"
+                                performDeletePlaylistFolders();
+                                cancelChanges.setVisibility(View.GONE);
+                                buttonDelete.setVisibility(View.GONE);
+                                buttonParentControll.setVisibility(View.GONE);
+                                playlistAdapter.notifyDataSetChanged();
+                                clearSelectingToolbar();
+                            }
+                        })
+                        .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Пользователь нажал "Отмена"
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+        parentControll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBaseHelper dBaseHelper = new DBaseHelper(getContext());
+                dBaseHelper.openDataBase();
+                for (String folder: selectionFolderList){
+                    String isFolderForKids = dBaseHelper.getPlaylistForKidsStatus(folder);
+                    dBaseHelper.makePlaylistForKidsInDatabase(folder, isFolderForKids);
+                }
+                dBaseHelper.close();
+                cancelChanges.setVisibility(View.GONE);
+                buttonDelete.setVisibility(View.GONE);
+                buttonParentControll.setVisibility(View.GONE);
+                clearSelectingToolbar();
+                playlistAdapter.notifyDataSetChanged();
+            }
+        });
+
+
 
         addPlaylistImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +187,7 @@ public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDia
                 openDialogAdd();
             }
         });
+
 
         super.onViewCreated(view, savedInstanceState);
     }
@@ -122,20 +200,85 @@ public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDia
 
     public void createPlaylistFolder(String playlistName) {
         File dir = new File(getActivity().getExternalFilesDir(null), playlistName);
+        DBaseHelper dBaseHelper = new DBaseHelper(getContext());
+        dBaseHelper.openDataBase();
         if (!dir.exists()) {
             if (dir.mkdirs()) {
                 Toast.makeText(getActivity(), "Папка плейлиста создана", Toast.LENGTH_SHORT).show();
+                dBaseHelper.makePlaylistDatabase((dir).toString());
+                displayFolders(); // Обновить список папок
             } else {
                 Toast.makeText(getActivity(), "Ошибка при создании папки плейлиста", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(getActivity(), "Папка плейлиста уже существует", Toast.LENGTH_SHORT).show();
         }
+        dBaseHelper.close();
     }
+
+
+    private void performDeletePlaylistFolders() {
+        for (String folderName : selectionFolderList) {
+            File folder = new File(folderName);
+            if (folder.exists()) {
+                deleteRecursive(folder);
+            }
+        }
+        // Очистить список выбранных папок
+        selectionFolderList.clear();
+        Toast.makeText(getActivity(), "Выбранные папки удалены", Toast.LENGTH_SHORT).show();
+        displayFolders(); // Обновить список папок
+    }
+
+
+    private void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory()) {
+            for (File child : fileOrDirectory.listFiles()) {
+                deleteRecursive(child);
+            }
+        }
+        fileOrDirectory.delete();
+    }
+
+
 
     @Override
     public void applyParams(String playlistName) {
         createPlaylistFolder(playlistName);
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+        is_selectable = true;
+        cancelChanges.setVisibility(View.VISIBLE);
+        buttonDelete.setVisibility(View.VISIBLE);
+        buttonParentControll.setVisibility(View.VISIBLE);
+        playlistAdapter.notifyDataSetChanged();
+        return true;
+    }
+
+
+    public void prepareSelection(View v, int position) {
+        if( ((CheckBox)v).isChecked()){
+            selectionFolderList.add(folderList.get(position));
+        }
+    }
+    private void clearSelectingToolbar(){
+        is_selectable = false;
+        selectionFolderList.clear();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isBackPressed = false;
+        clearSelectingToolbar();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        clearSelectingToolbar();
+        isBackPressed = false;
+    }
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/from_playlist_delete"
+        android:title="Удалить"
+        android:icon="@drawable/delete_svg"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/from_playlist_replace"
+        android:title="Переместить"
+        android:icon="@drawable/replace"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/share"
+        android:title="Переслать"
+        android:icon="@drawable/share"
+        app:showAsAction="ifRoom"
+        />
+</menu>

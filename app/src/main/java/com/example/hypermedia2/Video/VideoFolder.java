@@ -100,6 +100,13 @@ public class VideoFolder extends Fragment implements SearchView.OnQueryTextListe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                NavController navController = Navigation.findNavController(requireView());
+                navController.popBackStack();
+            }
+        });
         recyclerView = view.findViewById(R.id.videoFolder_recycleview);
         countText = view.findViewById(R.id.counter_textView);
         toolbar = view.findViewById(R.id.videoFolderToolbar);

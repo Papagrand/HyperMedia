@@ -51,9 +51,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Добавить плейлист"
+            android:layout_weight="3"
             android:fontFamily="@font/centurygothic"
             android:textColor="@color/white"
             android:textSize="18sp"/>
+        <ImageButton
+            android:id="@+id/cancel_changes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cross"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:background="@android:color/transparent"/>
+        <ImageButton
+            android:id="@+id/from_homefragment_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/delete_svg"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:background="@android:color/transparent"/>
+        <ImageButton
+            android:id="@+id/add_delete_parent_controll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/child_controll"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:background="@android:color/transparent"/>
 
     </LinearLayout>
 
