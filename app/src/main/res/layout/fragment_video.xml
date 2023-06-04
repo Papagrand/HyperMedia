@@ -28,7 +28,7 @@
             android:layout_marginTop="118px"
             android:text="Видео"
             android:textColor="@color/selected"
-            android:textSize="30dp"
+            android:textSize="25dp"
             android:fontFamily="@font/gotbold"/>
 
     </LinearLayout>

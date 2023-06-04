@@ -49,14 +49,16 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         int index = playlistName.get(position).lastIndexOf("/");
         String folderName = playlistName.get(position).substring(index+1);
         holder.name.setText(folderName);
+        holder.countVideos.setText("");
         dBaseHelper = new DBaseHelper(context);
         dBaseHelper.openDataBase();
         String isFolderForKids = dBaseHelper.getPlaylistForKidsStatus(playlistName.get(position));
         if (isFolderForKids.equals("yes")) {
             holder.kidsControll.setVisibility(View.VISIBLE);
         } else {
-            holder.kidsControll.setVisibility(View.GONE);
+            holder.kidsControll.setVisibility(View.INVISIBLE);
         }
+        dBaseHelper.close();
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

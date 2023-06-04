@@ -7,8 +7,11 @@
     tools:context=".Home.HomeFragment"
     android:orientation="vertical"
     android:id="@+id/homeFragment">
-
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <LinearLayout
         android:id="@+id/homeTopTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,8 +32,36 @@
             android:layout_marginTop="118px"
             android:text="Главная"
             android:textColor="@color/selected"
-            android:textSize="30dp"
+            android:textSize="25dp"
             android:fontFamily="@font/gotbold"/>
+
+    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/goToChildMode"
+            android:layout_marginLeft="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="135px"
+
+            android:gravity="right">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/child_controll"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Детский режим"
+                android:textColor="@color/selected"
+                android:textSize="17dp"
+                android:fontFamily="@font/centurygothic"/>
+        </LinearLayout>
 
     </LinearLayout>
     <LinearLayout

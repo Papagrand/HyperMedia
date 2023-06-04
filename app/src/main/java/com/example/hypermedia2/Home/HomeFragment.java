@@ -1,38 +1,33 @@
 package com.example.hypermedia2.Home;
 
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.hypermedia2.ChildModeThings.ChildModeDialogFragment;
 import com.example.hypermedia2.DBaseHelper;
+import com.example.hypermedia2.ChildModeThings.ForChildModeActivity;
+import com.example.hypermedia2.OrganizationOfParentControll.OrganizationActivity;
 import com.example.hypermedia2.R;
-import com.example.hypermedia2.Video.VideoFolder;
 import com.example.hypermedia2.Video.VideoModel;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDialogListener, View.OnLongClickListener {
@@ -50,6 +45,7 @@ public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDia
     TextView countText;
     ImageButton buttonDelete, buttonParentControll, cancelChanges, parentControll;
     ImageView kidsIndecator;
+    LinearLayout goToChildMode;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -124,6 +120,21 @@ public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDia
         cancelChanges = view.findViewById(R.id.cancel_changes);
         parentControll = view.findViewById(R.id.add_delete_parent_controll);
         kidsIndecator = view.findViewById(R.id.kids_indicator);
+        goToChildMode = view.findViewById(R.id.goToChildMode);
+        goToChildMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DBaseHelper dBaseHelper = new DBaseHelper(getContext());
+                dBaseHelper.openDataBase();
+                if (dBaseHelper.checkUserRegistration()==null) {
+                    openDialogParentControll();
+                } else {
+                    Intent intent = new Intent(getActivity(), ForChildModeActivity.class);
+                    startActivity(intent);
+                }
+                dBaseHelper.close();
+            }
+        });
         cancelChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,6 +207,11 @@ public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDia
         PlaylistDialog playlistDialog = new PlaylistDialog();
         playlistDialog.setListener(this);
         playlistDialog.show(getActivity().getSupportFragmentManager(), "playlist dialog");
+    }
+    private void openDialogParentControll(){
+        ChildModeDialogFragment childModeDialogFragment = new ChildModeDialogFragment();
+        childModeDialogFragment.setListener(this);
+        childModeDialogFragment.show(getActivity().getSupportFragmentManager(), "childcontroll dialog");
     }
 
     public void createPlaylistFolder(String playlistName) {

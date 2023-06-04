@@ -126,6 +126,30 @@ public class DBaseHelper extends SQLiteOpenHelper {
         return status;
     }
 
+    public void makeParentControllDatabase(String password, String secretWord){
+        ContentValues cv = new ContentValues();
+        cv.put("parent_password",password);
+        cv.put("parent_secretword",secretWord);
+        sqliteDataBase.insert("ParentControll", null, cv);
+    }
+
+    @SuppressLint("Range")
+    public String[] checkUserRegistration() {
+        String[] userInfo = new String[2];
+        String[] columns = {"parent_password", "parent_secretword"};
+        Cursor cursor = sqliteDataBase.query("ParentControll", columns, null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            userInfo[0] = cursor.getString(cursor.getColumnIndex("parent_password"));
+            userInfo[1] = cursor.getString(cursor.getColumnIndex("parent_secretword"));
+        } else {
+            userInfo = null; // Если пользователь не зарегистрирован, возвращаем null
+        }
+
+        cursor.close();
+        return userInfo;
+    }
+
     public void makePlaylistDatabase(String PlaylistName){
         ContentValues cv = new ContentValues();
         cv.put("playlist_name",PlaylistName);

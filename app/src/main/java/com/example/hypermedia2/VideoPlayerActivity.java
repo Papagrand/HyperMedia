@@ -2,6 +2,7 @@ package com.example.hypermedia2;
 
 import static com.example.hypermedia2.Video.VideosAdapter.videoFolder;
 import static com.example.hypermedia2.Home.VideosInPlaylistAdapter.playlistNewVideos;
+import static com.example.hypermedia2.ChildModeThings.VideosInChildModePlaylistAdapter.videosForChild;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -217,6 +218,50 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
                 concatenatingMediaSource = new ConcatenatingMediaSource();
                 for (int i = 0; i < playlistNewVideos.size(); i++) {
                     new File(String.valueOf(playlistNewVideos.get(i)));
+                    MediaItem mediaItem = MediaItem.fromUri(uri); // Create MediaItem using uri
+                    MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(mediaItem); // Pass the mediaItem
+                    concatenatingMediaSource.addMediaSource(mediaSource);
+                }
+                videoView.setPlayer(player);
+                videoView.setKeepScreenOn(true);
+                player.prepare(concatenatingMediaSource);
+
+                player.addListener(new Player.EventListener() {
+                    @Override
+                    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                        if (playbackState == Player.STATE_READY){
+                            long duration = player.getDuration();
+                            long currentPosition = player.getCurrentPosition();
+                            if (duration > 0) {
+                                int progress = (int) (1000L * currentPosition / duration);
+                                videoSeekBar.setProgress(progress);
+                            }
+                        }
+                    }
+                });
+
+                player.seekTo(position, C.TIME_UNSET);
+                player.play();
+                audiotrack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+            }
+        }
+        else if (videosForChild != null && position >= 0 && position < videosForChild.size()) {
+
+            path = videosForChild.get(position).getPath();
+            if (path != null) {
+                Uri uri = Uri.parse(path);
+                player = new SimpleExoPlayer.Builder(this).build();
+                isVideoPlaying = true;
+                DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "app"));
+                concatenatingMediaSource = new ConcatenatingMediaSource();
+                for (int i = 0; i < videosForChild.size(); i++) {
+                    new File(String.valueOf(videosForChild.get(i)));
                     MediaItem mediaItem = MediaItem.fromUri(uri); // Create MediaItem using uri
                     MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
                             .createMediaSource(mediaItem); // Pass the mediaItem

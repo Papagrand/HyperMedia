@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class VideoModel implements Parcelable {
+    private boolean isSelected;
 
     String id;
     String path;

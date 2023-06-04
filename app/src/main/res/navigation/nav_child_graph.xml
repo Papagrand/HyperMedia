@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_child_graph"
+    app:startDestination="@id/childMode">
+
+    <fragment
+        android:id="@+id/childMode"
+        android:name="com.example.hypermedia2.ChildModeThings.ChildMode"
+        android:label="ChildMode" >
+        <action
+            android:id="@+id/action_childMode_to_videosInChildModePlaylistFragment"
+            app:destination="@id/videosInChildModePlaylistFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/videosInChildModePlaylistFragment"
+        android:name="com.example.hypermedia2.ChildModeThings.VideosInChildModePlaylistFragment"
+        android:label="VideosInChildModePlaylistFragment" >
+        <action
+            android:id="@+id/action_videosInChildModePlaylistFragment_to_childMode"
+            app:destination="@id/childMode" />
+    </fragment>
+</navigation>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_registration_graph"
+    app:startDestination="@id/creatingPasswordFragment">
+
+    <fragment
+        android:id="@+id/creatingPasswordFragment"
+        android:name="com.example.hypermedia2.OrganizationOfParentControll.CreatingPasswordFragment"
+        android:label="fragment_creating_password"
+        tools:layout="@layout/fragment_creating_password" >
+        <action
+            android:id="@+id/action_creatingPasswordFragment_to_creatingSecretwordFragment"
+            app:destination="@id/creatingSecretwordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/creatingSecretwordFragment"
+        android:name="com.example.hypermedia2.OrganizationOfParentControll.CreatingSecretwordFragment"
+        android:label="CreatingSecretwordFragment" >
+        <action
+            android:id="@+id/action_creatingSecretwordFragment_to_creatingPasswordFragment"
+            app:destination="@id/creatingPasswordFragment" />
+    </fragment>
+</navigation>

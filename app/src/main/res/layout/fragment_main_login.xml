@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginThings.MainLoginFragment"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:layout_marginTop="-30dp"
+        android:id="@+id/mainText_login"
+        android:layout_width="wrap_content"
+        android:layout_height="170dp"
+        android:text="Введите пароль для входа"
+        android:maxLines="3"
+        android:textSize="30sp"
+        android:fontFamily="@font/gotbold"
+        android:textColor="@color/white"
+        android:padding="15dp"
+        android:gravity="center"
+        />
+    <EditText
+        android:id="@+id/pin_code_edittext_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberPassword"
+        android:padding="20dp"
+        android:maxLength="4"
+        android:textSize="30dp"
+        android:background="@android:color/transparent"
+        />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:columnCount="3"
+        android:rowCount="4">
+
+
+        <!-- Кнопки 1-9 -->
+        <ImageButton
+            android:id="@+id/login_button_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number1" />
+
+        <ImageButton
+            android:id="@+id/login_button_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number2" />
+
+        <ImageButton
+            android:id="@+id/login_button_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number3" />
+
+        <ImageButton
+            android:id="@+id/login_button_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number4" />
+
+        <ImageButton
+            android:id="@+id/login_button_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number5" />
+
+        <ImageButton
+            android:id="@+id/login_button_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number6" />
+
+        <ImageButton
+            android:id="@+id/login_button_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number7" />
+
+        <ImageButton
+            android:id="@+id/login_button_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number8" />
+
+        <ImageButton
+            android:id="@+id/login_button_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number9" />
+
+        <!-- Пустая ячейка -->
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1" />
+
+        <!-- Кнопка 0 -->
+        <ImageButton
+            android:id="@+id/login_button_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/number0" />
+        <ImageButton
+            android:id="@+id/backspace_login"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/backspace" />
+
+    </GridLayout>
+
+    <TextView
+        android:id="@+id/text_forgot_password"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Забыли пароль?"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:textColor="@color/selected"
+        android:textSize="20dp"
+        android:fontFamily="@font/centurygothic"/>
+    <LinearLayout
+        android:id="@+id/goToChildModeFromLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="40px"
+
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/child_controll"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Детский режим"
+            android:textColor="@color/selected"
+            android:textSize="25dp"
+            android:fontFamily="@font/centurygothic"/>
+    </LinearLayout>
+
+</LinearLayout>

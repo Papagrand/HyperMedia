@@ -10,8 +10,5 @@
     <item android:id="@id/musicFragment"
         android:icon="@drawable/music_icon_nav"
         android:title="Музыка"/>
-    <item android:id="@id/otherFilesFragment"
-        android:icon="@drawable/otherfiles_icon_nav"
-        android:title=""/>
 
 </menu>

@@ -17,18 +17,30 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetTheme</item>
         <!-- Customize your theme here. -->
     </style>
+
     <style name="AppBottomSheetTheme" parent="Theme.Design.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModelStyle</item>
     </style>
-    <style name="AppModelStyle"
-        parent="Widget.Design.BottomSheet.Modal">
+
+    <style name="AppModelStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_background</item>
     </style>
+
     <style name="BottomSheetDialogThemeVideoMenu" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/BottomSheetStyleVideoMenu</item>
     </style>
+
     <style name="BottomSheetStyleVideoMenu" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
         <item name="behavior_peekHeight">512dp</item>
     </style>
+
+    <style name="Theme.HyperMedia2.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.HyperMedia2.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.HyperMedia2.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
