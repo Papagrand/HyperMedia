@@ -161,7 +161,6 @@ public class VideosInChildModePlaylistFragment extends Fragment implements Searc
         imageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.themecolor), PorterDuff.Mode.SRC_IN);
         searchView.setQueryHint("Search file name");
         searchView.setOnQueryTextListener(this);
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
