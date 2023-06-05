@@ -154,6 +154,8 @@ public class VideosInChildModePlaylistFragment extends Fragment implements Searc
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main_playlist_toolbar_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.playlist_search);
+        MenuItem itemDelete = menu.findItem(R.id.add_to_playlist);
+        itemDelete.setVisible(false);
         SearchView searchView = (SearchView) menuItem.getActionView();
         ImageView imageView = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
         imageView.setColorFilter(ContextCompat.getColor(getContext(), R.color.themecolor), PorterDuff.Mode.SRC_IN);
