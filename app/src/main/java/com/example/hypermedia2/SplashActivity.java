@@ -2,6 +2,7 @@ package com.example.hypermedia2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -25,9 +26,11 @@ public class SplashActivity extends AppCompatActivity {
         if (dBaseHelper.checkUserRegistration()!=null) {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+            finish();
         } else {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            finish();
         }
         dBaseHelper.close();
     }

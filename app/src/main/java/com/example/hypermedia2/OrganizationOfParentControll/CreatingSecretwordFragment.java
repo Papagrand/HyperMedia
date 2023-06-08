@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,16 +77,30 @@ public class CreatingSecretwordFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String secretWord = editText.getText().toString().trim();
+
                 if (secretWord.isEmpty()) {
                     Toast.makeText(getActivity(), "Вы не ввели секретное слово для восстановления", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else if (secretWord.matches("[a-zA-Z]+") && !secretWord.contains(" ")) {
                     DBaseHelper dBaseHelper = new DBaseHelper(getActivity());
                     dBaseHelper.openDataBase();
                     dBaseHelper.makeParentControllDatabase(password,editText.getText().toString());
                     dBaseHelper.close();
-                    //Здесь написать переход в фрагмент для входа в основное приложение
                     Intent intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);
+                    getActivity().finish();
+                } else {
+                    mainText.setText("Слово не должно содержать цифр, символов и пробелов");
+                    mainText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainText.setText("Введите секретное слово для восстановления доступа к полной версии");
+                            mainText.setTextColor(getResources().getColor(android.R.color.white));
+                        }
+                    }, 7000); // Задержка в миллисекундах (7 секунд = 7000 миллисекунд)
                 }
             }
         });

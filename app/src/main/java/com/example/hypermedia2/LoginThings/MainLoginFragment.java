@@ -1,5 +1,7 @@
 package com.example.hypermedia2.LoginThings;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hypermedia2.ChildModeThings.ForChildModeActivity;
 import com.example.hypermedia2.DBaseHelper;
@@ -32,9 +35,9 @@ public class MainLoginFragment extends Fragment {
             button6,button7,button8,button9,button0, backspace;
     TextView mainText, forgotText;
     EditText editText;
-    LinearLayout goToChildModeLayout;
+    LinearLayout goToChildModeLayout, deleteChildMode;
     String firstTry="";
-
+    boolean userWannaDelete = false;
 
     public MainLoginFragment() {
         // Required empty public constructor
@@ -83,12 +86,43 @@ public class MainLoginFragment extends Fragment {
         mainText =view.findViewById(R.id.mainText_login);
         forgotText = view.findViewById(R.id.text_forgot_password);
         goToChildModeLayout = view.findViewById(R.id.goToChildModeFromLogin);
+        deleteChildMode = view.findViewById(R.id.deleteChildModeFromLogin);
 
         goToChildModeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ForChildModeActivity.class);
                 startActivity(intent);
+                getActivity().finish();
+            }
+        });
+        deleteChildMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Отключение родительского контроля");
+                builder.setMessage("Вы уверены, что хотите отключить родительский контроль?");
+
+                // Обработчик нажатия на кнопку "Да"
+                builder.setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        userWannaDelete = true;
+                        mainText.setText("Введите верный код для подтверждения отключения");
+                        dialog.dismiss(); // Закрытие диалогового окна
+                    }
+                });
+
+                // Обработчик нажатия на кнопку "Нет"
+                builder.setNegativeButton("Нет", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss(); // Закрытие диалогового окна
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -194,7 +228,16 @@ public class MainLoginFragment extends Fragment {
                         if (firstTry.equals(passSecret[0])){
                             Intent intent = new Intent(getContext(), MainActivity.class);
                             startActivity(intent);
+                            if (userWannaDelete==true){
+                                dBaseHelper.deleteParentControll();
+                            }
+                            getActivity().finish();
                         }else{
+                            if (userWannaDelete == true){
+                                Toast.makeText(getContext(), "Повторите попытку, снова нажав на поле слева снизу",
+                                        Toast.LENGTH_SHORT).show();
+                                userWannaDelete=false;
+                            }
                             mainText.setText("Введен неверный пароль, повторите попытку");
                             editText.setText("");
                             firstTry = "";

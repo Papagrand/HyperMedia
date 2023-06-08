@@ -62,6 +62,7 @@ public class ChildModeDialogFragment extends AppCompatDialogFragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), OrganizationActivity.class);
                 startActivity(intent);
+                getActivity().finish();
                 dismiss();
             }
         });

@@ -150,6 +150,18 @@ public class DBaseHelper extends SQLiteOpenHelper {
         return userInfo;
     }
 
+    public void deleteParentControll() {
+        // Получаем экземпляр базы данных
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Удаляем все строки из таблицы ParentControll
+        db.delete("ParentControll", null, null);
+
+        // Закрываем базу данных
+        db.close();
+    }
+
+
     public void makePlaylistDatabase(String PlaylistName){
         ContentValues cv = new ContentValues();
         cv.put("playlist_name",PlaylistName);

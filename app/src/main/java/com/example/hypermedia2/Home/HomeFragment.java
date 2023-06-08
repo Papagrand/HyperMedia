@@ -131,6 +131,7 @@ public class HomeFragment extends Fragment implements PlaylistDialog.PlaylistDia
                 } else {
                     Intent intent = new Intent(getActivity(), ForChildModeActivity.class);
                     startActivity(intent);
+                    getActivity().finish();
                 }
                 dBaseHelper.close();
             }

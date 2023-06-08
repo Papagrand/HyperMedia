@@ -136,30 +136,71 @@
         android:textColor="@color/selected"
         android:textSize="20dp"
         android:fontFamily="@font/centurygothic"/>
+
     <LinearLayout
-        android:id="@+id/goToChildModeFromLogin"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="40px"
-
         android:gravity="center">
 
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/child_controll"/>
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/deleteChildModeFromLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="Детский режим"
-            android:textColor="@color/selected"
-            android:textSize="25dp"
-            android:fontFamily="@font/centurygothic"/>
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_marginTop="30px"
+            android:layout_marginBottom="10px"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/child_controll_delete"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:textAlignment="center"
+                android:text="Отключить \nродительский \nконтроль"
+                android:textColor="@color/gray"
+                android:textSize="20dp"
+                android:fontFamily="@font/centurygothic"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/goToChildModeFromLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_marginTop="30px"
+            android:layout_marginBottom="5px"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/child_controll"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Детский режим"
+                android:gravity="center"
+                android:textColor="@color/selected"
+                android:textSize="20dp"
+                android:fontFamily="@font/centurygothic"/>
+        </LinearLayout>
+
     </LinearLayout>
+
+
 
 </LinearLayout>
